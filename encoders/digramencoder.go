@@ -8,7 +8,7 @@ import (
 
 type DigramEncoder struct {
 	Alphabet  []rune            // Valid codepoints in encoding
-	Codewords map[string]string // Map from codepoints to codewords
+	Codewords map[string]string // Map from strings to codewords
 	Size      int               // Dictionary size
 }
 
@@ -19,13 +19,13 @@ func Digram(alphabet []rune, corpus string, dictionarySize int) DigramEncoder {
 	frequencies := digramFrequencies(corpus, alphabet)
 	digrams := mostFrequentDigrams(dictionarySize-alphabetSize, frequencies)
 
+	codelength := int(math.Ceil(math.Log2(float64(dictionarySize))))
+
 	var i int64 = 0
 	codewords := make(map[string]string)
 	for _, character := range alphabet {
 		// Convert int to binary string
 		codeword := strconv.FormatInt(i, 2)
-
-		codelength := int(math.Log2(float64(dictionarySize)))
 
 		// Pad binary string to codelength with 0s
 		if len(codeword) < codelength {
@@ -39,8 +39,6 @@ func Digram(alphabet []rune, corpus string, dictionarySize int) DigramEncoder {
 	for _, digram := range digrams {
 		// Convert int to binary string
 		codeword := strconv.FormatInt(i, 2)
-
-		codelength := int(math.Log2(float64(dictionarySize)))
 
 		// Pad binary string to codelength with 0s
 		if len(codeword) < codelength {
@@ -137,7 +135,7 @@ func (e DigramEncoder) Decode(code Code) Source {
 
 	var sb strings.Builder
 
-	step := int(math.Log2(float64(e.Size)))
+	step := int(math.Ceil(math.Log2(float64(e.Size))))
 	for i := 0; i <= len(code)-step; i += step {
 		codeword := string(code[i : i+step])
 		sb.WriteString(decodewords[codeword])

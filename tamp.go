@@ -16,9 +16,7 @@ func main() {
 	alphabet := Alphabet()
 	corpus := Corpus("corpus")
 
-	digramEncoder := encoders.Digram(alphabet, corpus, 256)
-	EncodeFile("testing/test.txt", "digram", digramEncoder)
-
+	// Usage example
 	huffmanEncoder := encoders.Huffman(alphabet, corpus)
 	EncodeFile("testing/test.txt", "huffman", huffmanEncoder)
 }
